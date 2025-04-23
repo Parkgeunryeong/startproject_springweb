@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+<meta charset="UTF-8">
+<title>VirtualSky 테스트</title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="/js/virtualsky.min.js"></script>
+<script src="/js/virtualsky-planets.js"></script>
+<!-- 로컬에 넣었을 경우 -->
+
+<style>
+body {
+	margin: 0;
+	padding: 0;
+}
+
+#starmap1 {
+	width: 100%;
+	height: 800px;
+}
+</style>
+</head>
+<body>
+  <h1>하이1</h1>
+  <div id="starmap1"></div>
+
+   <script>
+    $(document).ready(function () {
+      $.virtualsky({
+        id: 'starmap1',
+        lang: 'en',
+        projection: 'stereo',
+        ground: true,
+        latitude: 37.447267,
+        longitude: 126.656498,
+        constellations: true,
+        constellationlabels: true,
+        showstars: true,
+        planets: true,
+        planetlabels: true,
+        showposition: true,
+        gridlines_az: true,
+        mouse: {
+            drag: true,
+            zoom: true,
+            move: true
+          }
+        
+      });
+    });
+  </script>
+</body>
+</html>
