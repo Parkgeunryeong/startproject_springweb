@@ -16,6 +16,20 @@ public class MainController {
 	public String space() {
 		return "space";
 	}
+	@GetMapping("/sky")
+	public String sky() {
+		return "sky";
+	}
+	@GetMapping("/sky2")
+	public String sky2() {
+		return "sky2";
+	}
+	@GetMapping("/scorehome")
+	public String scorehome() {
+		return "score_home";
+	}
+	
+	
 	
 	
 	

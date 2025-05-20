@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="/js/virtualsky.min.js?nocache=22"></script>
+
+
+<style>
+body {
+	margin: 0;
+	padding: 0;
+}
+
+#starmap1 {
+	width: 100%;
+	height: 800px;
+}
+#starmap2 {
+	width: 100%;
+	height: 800px;
+}
+</style>
+</head>
+<body>
+	<h2>현재 태양의 위치</h2>
+	<p id="info"> 위치 정보 불러오는 중...</p>
+	<div id="starmap1"></div>
+
+	<script>
+    $(document).ready(function () {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(success, error);
+      } else {
+        $("#info").text(" 위치 정보 기능을 지원하지 않습니다.");
+      }
+
+      function success(position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        //  Flask API 호출
+        fetch(`http://localhost:5000/api/jupiter?lat=${lat}&lon=${lon}`)
+          .then(res => res.json())
+          .then(data => {
+            const ra = data.ra;
+            const dec = data.dec;
+
+            $("#info").html(` 위치: ${lat.toFixed(3)}, ${lon.toFixed(3)}<br>
+             적경(RA): ${ra}시, 적위(Dec): ${dec}도`);
+            
+         
+
+            //  VirtualSky 초기화
+            const sky= $.virtualsky({
+              id: "starmap1",
+              lang: "en",
+              projection: "gnomic",
+              ground: false,
+              latitude: lat,
+              longitude: lon,
+              clock: new Date(),
+              constellations: true,
+              constellationlabels: true,
+              showstars: true,
+              planets: false,
+              planetlabels: false,
+              showposition: false,
+              gridlines_az: true,
+              mouse: {
+                drag: true,
+                zoom: true,
+                move: true
+              }
+            });
+            setTimeout(() => {
+            	sky.draw.planets = false;
+            	
+            	
+                
+            	
+                sky.setClock(new Date());
+                sky.times = sky.astronomicalTimes();  
+                console.log("🌍 VirtualSky 설정 확인");
+                console.log("위도:", sky.latitude);
+                console.log("경도:", sky.longitude);
+                console.log("시각 (sky.clock):", sky.clock.toISOString());
+                console.log("입력된 적경 (RA):", ra);
+                console.log("입력된 적위 (Dec):", dec);
+                sky.addPointer({
+                  ra: ra,
+                  dec: dec,
+                  label: "스카이 필드로 계산한 태양",
+                  colour: "red",
+                  
+                });
+               
+            	
+              }, 2000); // VirtualSky 렌더링 완료까지 약간 대기
+          });
+      }
+
+      function error() {
+        $("#info").text(" 위치 정보를 불러올 수 없습니다.");
+      }
+    });
+  </script>
+</body>
+</html>

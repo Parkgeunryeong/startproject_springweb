@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="/js/virtualsky.min.js"></script>
+
+<style>
+body {
+	margin: 0;
+	padding: 0;
+}
+
+#starmap1 {
+	width: 100%;
+	height: 800px;
+}
+</style>
+</head>
+<body>
+<h1>하이1</h1>
+  <div id="starmap1"></div>
+
+   <script>
+    $(document).ready(function () {
+      $.virtualsky({
+        id: 'starmap1',
+        lang: 'en',
+        projection: 'stereo',
+        ground: true,
+        latitude: 37.447267,
+        longitude: 126.656498,
+        showstars: false,
+        showposition: true,
+        gridlines_az: true,
+        
+        
+      });
+    });
+  </script>
+
+</body>
+</html>

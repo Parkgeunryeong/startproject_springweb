@@ -1,0 +1,139 @@
+/* Main styles */
+body {
+  font-family: "Arial", sans-serif;
+  color: white;
+  overflow-x: hidden;
+}
+
+.cosmic-bg {
+  background-color: #000;
+  background-image: radial-gradient(circle at center, #1a0933 0%, #0d0d2b 40%, #000 100%);
+  position: relative;
+}
+
+.cosmic-title {
+  background: linear-gradient(to right, #a78bfa, #38bdf8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 20px rgba(167, 139, 250, 0.3);
+}
+
+/* Stars background */
+.stars-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.stars-container:before,
+.stars-container:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+    radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+    radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 550px 550px, 350px 350px, 250px 250px;
+  background-position: 0 0, 40px 60px, 130px 270px;
+  animation: twinkle 10s ease-in-out infinite alternate;
+}
+
+.stars-container:after {
+  background-size: 450px 450px, 250px 250px, 150px 150px;
+  background-position: 50px 50px, 130px 150px, 70px 200px;
+  animation-delay: -5s;
+}
+
+@keyframes twinkle {
+  0% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Section styles */
+.section-container {
+  position: relative;
+  min-height: 400px;
+}
+
+.section {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  transition: all 0.5s ease;
+  overflow: hidden;
+}
+
+.section:hover {
+  color: white;
+  transform: scale(1.02);
+}
+
+.section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 1;
+}
+
+.section:hover::before {
+  opacity: 1;
+}
+
+.section-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.weather-section {
+  border-right: 1px solid rgba(138, 75, 175, 0.3);
+}
+
+.weather-section::before {
+  background: linear-gradient(to bottom, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+}
+
+.stars-section::before {
+  background: linear-gradient(to bottom, rgba(139, 92, 246, 0.1), rgba(79, 70, 229, 0.1));
+}
+
+.section-arrow {
+  transition: transform 0.3s ease;
+}
+
+.section:hover .section-arrow {
+  transform: translateX(5px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+  .weather-section {
+    border-right: none;
+    border-bottom: 1px solid rgba(138, 75, 175, 0.3);
+  }
+}
