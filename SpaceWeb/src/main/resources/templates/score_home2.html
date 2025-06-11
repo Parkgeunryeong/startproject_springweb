@@ -280,8 +280,6 @@
 			<a th:href="@{/home}" class="back-button"> <i
 				class="bi bi-arrow-left"></i> Back to Home
 			</a>
-			<a th:href="@{/search}" class="back-button"> 장소를 검색하세요!
-			</a>
 		</div>
 
 		<h1>별을 언제 보러 갈까?? 예측 점수를 확인하세요!</h1>
@@ -310,6 +308,10 @@
     document.addEventListener("DOMContentLoaded", function () {
         const info = document.getElementById("info");
         const result = document.getElementById("result");
+        
+        let locationData = [];
+        let fetchCount = 0;
+
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(success, error);
@@ -391,17 +393,44 @@
                 .then(res => res.json())
                 .then(data => {
                     const today = data[0]; // 오늘 날짜를 기준으로 한 점수만 표시
-                    const resultDiv = item.querySelector(".ai-result");
                     
-                    // 달 밝기를 백분율로 변환
-                    const moonValue = parseFloat(today.moon);
-                    const moonDisplay = moonValue <= 1 ? (moonValue * 100).toFixed(0) + "%" : today.moon;
                     
-                    resultDiv.innerHTML = `예측 점수: ${today.score}<br>달 밝기: ${moonDisplay}`;
+                    locationData.push({
+                        name: name,
+                        lat: lat,
+                        lon: lon,
+                        score: parseFloat(today.score),
+                        moon: parseFloat(today.moon),
+                        element: item  // 나중에 점수를 넣기 위해 원본 보관
+                    });
+                    
+                    fetchCount++;
+                    if (fetchCount === locationItems.length) {
+                        // 모든 fetch 완료시 점수가 높은 순으로 내림차순 정렬
+                        locationData.sort((a, b) => b.score - a.score);
+                        const top5 = locationData.slice(0, 5);
+
+                        // 상위 5개 요소만 출력
+                        locationData.forEach(dataItem => {
+                            const resultDiv = dataItem.element.querySelector(".ai-result");
+
+                            if (top5.includes(dataItem)) {
+                                const moonDisplay = dataItem.moon <= 1
+                                    ? (dataItem.moon * 100).toFixed(0) + "%"
+                                    : dataItem.moon;
+
+                                resultDiv.innerHTML = `
+                                    예측 점수: ${dataItem.score}<br>
+                                    달 밝기: ${moonDisplay}
+                                `;
+                            } else {
+                            	dataItem.element.style.display = "none";
+                            }
+                        });
+                    }
                 })
                 .catch(() => {
-                    const resultDiv = item.querySelector(".ai-result");
-                    resultDiv.innerHTML = `관측 점수 불러오기 실패`;
+                    fetchCount++;
                 });
         });
     });

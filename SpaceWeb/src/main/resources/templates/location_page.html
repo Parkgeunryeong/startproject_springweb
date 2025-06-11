@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div id="my-score">현재 위치 기반 점수 불러오는 중...</div>
+    <h2>추천 명소 목록</h2>
+    <h2>추천 명소 목록</h2>
+
+    <ul id="location-list">
+    <li th:each="loc : ${locations}"
+        th:attr="data-lat=${loc.latitude}, data-lon=${loc.longitude}">
+        <strong th:text="${loc.name}">명소 이름</strong>
+        <br>위도: <span th:text="${loc.latitude}">0.0</span>
+        <br>경도: <span th:text="${loc.longitude}">0.0</span>
+        <div class="ai-result">AI 점수 불러오는 중...</div>
+        <hr>
+    </li>
+</ul>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // 현재 위치 AI 점수 (기존)
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(success, error);
+    }
+
+    function success(position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        fetch(`http://localhost:5000/api/predict?lat=${lat}&lon=${lon}`)
+            .then(res => res.json())
+            .then(data => {
+                const today = data[0];
+                document.getElementById("my-score").innerHTML = `
+                    <strong>현재 위치 점수:</strong> ${today.score} / 달 밝기: ${today.moon}
+                `;
+            });
+    }
+
+    function error() {
+        document.getElementById("my-score").innerHTML = "위치 정보를 가져올 수 없습니다.";
+    }
+
+    // 명소 5개 AI 점수 불러오기
+    const locationItems = document.querySelectorAll("#location-list li");
+    locationItems.forEach(item => {
+        const lat = item.getAttribute("data-lat");
+        const lon = item.getAttribute("data-lon");
+
+        fetch(`http://localhost:5000/api/predict?lat=${lat}&lon=${lon}`)
+            .then(res => res.json())
+            .then(data => {
+                const today = data[0]; // 오늘 날짜 기준 점수만 표시
+                const resultDiv = item.querySelector(".ai-result");
+                resultDiv.innerHTML = `예측 점수: ${today.score} / 달 밝기: ${today.moon}`;
+            })
+            .catch(() => {
+                const resultDiv = item.querySelector(".ai-result");
+                resultDiv.innerHTML = `AI 점수 불러오기 실패`;
+            });
+    });
+});
+</script>
+</body>
+</html>

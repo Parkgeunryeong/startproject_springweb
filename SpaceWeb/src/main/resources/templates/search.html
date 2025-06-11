@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+<style>
+        body {
+            background-color: #000;
+            background-image: radial-gradient(circle at center, #1a0933 0%, #0d0d2b 40%, #000 100%);
+            color: white;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Stars background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255,255,255,0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            animation: twinkle 10s ease-in-out infinite alternate;
+            z-index: -1;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .search-container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            padding: 2rem;
+        }
+        
+        .main-title {
+            background: linear-gradient(to right, #a78bfa, #38bdf8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(167, 139, 250, 0.3);
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1.2rem;
+            border: 2px solid #6c5ce7;
+            border-radius: 50px;
+            background: rgba(20, 20, 50, 0.8);
+            color: white;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #a78bfa;
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.3);
+            background: rgba(30, 30, 70, 0.9);
+        }
+        
+        .search-input::placeholder {
+            color: #bbb;
+        }
+        
+        .search-list {
+            background: rgba(20, 20, 50, 0.9);
+            border: 1px solid #6c5ce7;
+            border-radius: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-left: 0;
+            margin-top: 1rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .search-list li {
+            list-style: none !important;
+            padding: 1rem 1.5rem !important;
+            cursor: pointer !important;
+            border-bottom: 1px solid rgba(108, 92, 231, 0.3) !important;
+            color: #ddd;
+            transition: all 0.3s ease;
+        }
+        
+        .search-list li:hover {
+            background: rgba(108, 92, 231, 0.2);
+            color: #a78bfa;
+            transform: translateX(10px);
+        }
+        
+        .search-list li:last-child {
+            border-bottom: none !important;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            display: inline-block;
+            color: white;
+            background-color: transparent;
+            border: 1px solid white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a78bfa;
+            font-size: 1.2rem;
+            pointer-events: none;
+        }
+        
+        .input-container {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+        
+        /* 스크롤바 스타일링 */
+        .search-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .search-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        
+        .search-list::-webkit-scrollbar-thumb {
+            background: rgba(108, 92, 231, 0.5);
+            border-radius: 4px;
+        }
+        
+        .search-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(108, 92, 231, 0.7);
+        }
+        
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5rem;
+            }
+            
+            .search-input {
+                font-size: 1rem;
+                padding: 0.8rem 1.2rem;
+            }
+            
+            .search-container {
+                padding: 1rem;
+            }
+            
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<a th:href="@{/home}" class="back-button">
+        <i class="bi bi-arrow-left"></i> Back to Home
+</a>
+
+<div class="search-container">
+        <h1 class="main-title">
+            <i class="bi bi-search"></i><br>
+            장소를 검색하세요
+        </h1>
+        
+        <div class="input-container">
+            <input type="text" id="keyword" class="search-input" placeholder="장소를 검색하세요" oninput="autoSearch()">
+            
+        </div>
+        
+        <ul id="search-list" class="search-list"></ul>
+        
+        <div id="place-result"></div>
+</div>
+
+
+
+
+
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2b25b23781322b72673233144779d42f&libraries=services"></script>
+
+<script>
+let debounceTimer;
+
+function autoSearch() {
+    const keyword = document.getElementById("keyword").value;
+
+    // 입력이 없으면 리스트 비우기
+    if (!keyword) {
+        document.getElementById("search-list").innerHTML = "";
+        return;
+    }
+
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+        const ps = new kakao.maps.services.Places();
+        ps.keywordSearch(keyword, function (data, status) {
+            const listEl = document.getElementById("search-list");
+            listEl.innerHTML = ""; // 리스트 초기화
+
+            if (status === kakao.maps.services.Status.OK) {
+                data.slice(0, 10).forEach(place => {
+                    const li = document.createElement("li");
+                    li.textContent = place.place_name;
+                    li.style.listStyle = "none";
+                    li.style.padding = "8px";
+                    li.style.cursor = "pointer";
+                    li.style.borderBottom = "1px solid #eee";
+
+                    li.onclick = () => {
+                        const lat = place.y;
+                        const lon = place.x;
+                        const name = encodeURIComponent(place.place_name);
+                        window.location.href = `/searchscore?lat=${lat}&lon=${lon}&name=${name}`;
+                    };
+
+                    listEl.appendChild(li);
+                });
+            }
+        });
+    }, 300); // 0.3초 디바운스 처리
+}
+</script>
+
+</body>
+</html>

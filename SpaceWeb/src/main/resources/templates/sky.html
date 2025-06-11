@@ -41,14 +41,17 @@ body {
         const lon = position.coords.longitude;
 
         //  Flask API 호출
-        fetch(`http://localhost:5000/api/jupiter?lat=${lat}&lon=${lon}`)
+        fetch(`http://localhost:5000/api/planets?lat=${lat}&lon=${lon}`)
           .then(res => res.json())
           .then(data => {
-            const ra = data.ra;
-            const dec = data.dec;
+            /* const ra = data.ra;
+            const dec = data.dec; */
+            const sun = data[0];
+            const jupiter = data[1];
+            const saturn = data[2];
+            const mars = data[3];
 
-            $("#info").html(` 위치: ${lat.toFixed(3)}, ${lon.toFixed(3)}<br>
-             적경(RA): ${ra}시, 적위(Dec): ${dec}도`);
+            $("#info").html(` 위치: ${lat.toFixed(3)}, ${lon.toFixed(3)}<br>`);
             
          
 
@@ -56,13 +59,13 @@ body {
             const sky= $.virtualsky({
               id: "starmap1",
               lang: "en",
-              projection: "gnomic",
+              projection: "stereo",
               ground: false,
               latitude: lat,
               longitude: lon,
               clock: new Date(),
-              constellations: true,
-              constellationlabels: true,
+              constellations: false,
+              constellationlabels: false,
               showstars: true,
               planets: false,
               planetlabels: false,
@@ -86,15 +89,41 @@ body {
                 console.log("위도:", sky.latitude);
                 console.log("경도:", sky.longitude);
                 console.log("시각 (sky.clock):", sky.clock.toISOString());
-                console.log("입력된 적경 (RA):", ra);
-                console.log("입력된 적위 (Dec):", dec);
+                
+                
                 sky.addPointer({
-                  ra: ra,
-                  dec: dec,
-                  label: "스카이 필드로 계산한 태양",
+                  ra: sun.ra,
+                  dec: sun.dec,
+                  label: "태양",
                   colour: "red",
                   
                 });
+                sky.addPointer({
+                    ra: jupiter.ra,
+                    dec: jupiter.dec,
+                    label: "목성",
+                    colour: "orange",
+                    
+                  });
+                sky.addPointer({
+                    ra: saturn.ra,
+                    dec: mars.dec,
+                    label: "토성",
+                    colour: "orange",
+                    
+                  });
+                sky.addPointer({
+                    ra: saturn.ra,
+                    dec: mars.dec,
+                    label: "화성",
+                    colour: "white",
+                    
+                  });
+                
+                
+               
+                
+                
                
             	
               }, 2000); // VirtualSky 렌더링 완료까지 약간 대기
